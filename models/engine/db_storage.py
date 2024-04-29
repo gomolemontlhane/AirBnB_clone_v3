@@ -101,3 +101,4 @@ class DBStorage:
             return len(all_inst_of_prov_cls)
         if cls not in classes.values():
             return
+
