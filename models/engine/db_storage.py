@@ -26,6 +26,7 @@ classes = {
     "User": User
 }
 
+
 class DBStorage:
     """Interacts with the MySQL database"""
 
