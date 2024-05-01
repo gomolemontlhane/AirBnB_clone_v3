@@ -30,6 +30,7 @@ classes = {
     "User": User
 }
 
+
 class TestDBStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of DBStorage class"""
 
