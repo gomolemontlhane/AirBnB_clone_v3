@@ -23,6 +23,7 @@ classes = {
     "User": User
 }
 
+
 class FileStorage:
     """Serializes instances to a JSON file & deserializes back to instances"""
 

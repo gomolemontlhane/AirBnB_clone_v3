@@ -96,4 +96,6 @@ class DBStorage:
         if cls:
             return self.__session.query(cls).count()
         else:
-            return sum(self.__session.query(cls).count() for cls in classes.values())
+            return sum(
+                self.__session.query(cls).count() for cls in classes.values()
+                )
