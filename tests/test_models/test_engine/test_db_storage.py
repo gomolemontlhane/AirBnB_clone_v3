@@ -100,3 +100,27 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         pass  # Add your test implementation
+
+
+class TestDBStorage(unittest.TestCase):
+    """Test the DBStorage class"""
+
+    def test_get_method(self):
+        """Test the get method"""
+        storage = DBStorage()
+        state = State(name="California")
+        storage.new(state)
+        storage.save()
+        retrieved_state = storage.get(State, state.id)
+        self.assertEqual(retrieved_state, state)
+
+    def test_count_method(self):
+        """Test the count method"""
+        storage = DBStorage()
+        initial_count = storage.count()
+        state1 = State(name="California")
+        state2 = State(name="New York")
+        storage.new(state1)
+        storage.new(state2)
+        storage.save()
+        self.assertEqual(storage.count(State), initial_count + 2)
