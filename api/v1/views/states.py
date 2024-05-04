@@ -1,57 +1,55 @@
 #!/usr/bin/python3
 """
-route for handling User objects and operations
+route for handling State objects and operations
 """
 from flask import jsonify, abort, request
 from api.v1.views import app_views, storage
-from models.user import User
+from models.state import State
 
 
-@app_views.route("/users", methods=["GET"], strict_slashes=False)
-def user_get_all():
+@app_views.route("/states", methods=["GET"], strict_slashes=False)
+def state_get_all():
     """
-    retrieves all User objects
-    :return: json of all users
+    retrieves all State objects
+    :return: json of all states
     """
-    user_list = []
-    user_obj = storage.all("User")
-    for obj in user_obj.values():
-        user_list.append(obj.to_json())
+    state_list = []
+    state_obj = storage.all("State")
+    for obj in state_obj.values():
+        state_list.append(obj.to_json())
 
-    return jsonify(user_list)
+    return jsonify(state_list)
 
 
-@app_views.route("/users", methods=["POST"], strict_slashes=False)
-def user_create():
+@app_views.route("/states", methods=["POST"], strict_slashes=False)
+def state_create():
     """
-    create user route
-    :return: newly created user obj
+    create state route
+    :return: newly created state obj
     """
-    user_json = request.get_json(silent=True)
-    if user_json is None:
+    state_json = request.get_json(silent=True)
+    if state_json is None:
         abort(400, 'Not a JSON')
-    if "email" not in user_json:
-        abort(400, 'Missing email')
-    if "password" not in user_json:
-        abort(400, 'Missing password')
+    if "name" not in state_json:
+        abort(400, 'Missing name')
 
-    new_user = User(**user_json)
-    new_user.save()
-    resp = jsonify(new_user.to_json())
+    new_state = State(**state_json)
+    new_state.save()
+    resp = jsonify(new_state.to_json())
     resp.status_code = 201
 
     return resp
 
 
-@app_views.route("/users/<user_id>",  methods=["GET"], strict_slashes=False)
-def user_by_id(user_id):
+@app_views.route("/states/<state_id>",  methods=["GET"], strict_slashes=False)
+def state_by_id(state_id):
     """
-    gets a specific User object by ID
-    :param user_id: user object id
-    :return: user obj with the specified id or error
+    gets a specific State object by ID
+    :param state_id: state object id
+    :return: state obj with the specified id or error
     """
 
-    fetched_obj = storage.get("User", str(user_id))
+    fetched_obj = storage.get("State", str(state_id))
 
     if fetched_obj is None:
         abort(404)
@@ -59,25 +57,25 @@ def user_by_id(user_id):
     return jsonify(fetched_obj.to_json())
 
 
-@app_views.route("/users/<user_id>",  methods=["PUT"], strict_slashes=False)
-def user_put(user_id):
+@app_views.route("/states/<state_id>",  methods=["PUT"], strict_slashes=False)
+def state_put(state_id):
     """
-    updates specific User object by ID
-    :param user_id: user object ID
-    :return: user object and 200 on success, or 400 or 404 on failure
+    updates specific State object by ID
+    :param state_id: state object ID
+    :return: state object and 200 on success, or 400 or 404 on failure
     """
-    user_json = request.get_json(silent=True)
+    state_json = request.get_json(silent=True)
 
-    if user_json is None:
+    if state_json is None:
         abort(400, 'Not a JSON')
 
-    fetched_obj = storage.get("User", str(user_id))
+    fetched_obj = storage.get("State", str(state_id))
 
     if fetched_obj is None:
         abort(404)
 
-    for key, val in user_json.items():
-        if key not in ["id", "created_at", "updated_at", "email"]:
+    for key, val in state_json.items():
+        if key not in ["id", "created_at", "updated_at"]:
             setattr(fetched_obj, key, val)
 
     fetched_obj.save()
@@ -85,15 +83,16 @@ def user_put(user_id):
     return jsonify(fetched_obj.to_json())
 
 
-@app_views.route("/users/<user_id>",  methods=["DELETE"], strict_slashes=False)
-def user_delete_by_id(user_id):
+@app_views.route("/states/<state_id>",
+                 methods=["DELETE"], strict_slashes=False)
+def state_delete_by_id(state_id):
     """
-    deletes User by id
-    :param user_id: user object id
+    deletes State by id
+    :param state_id: state object id
     :return: empty dict with 200 or 404 if not found
     """
 
-    fetched_obj = storage.get("User", str(user_id))
+    fetched_obj = storage.get("State", str(state_id))
 
     if fetched_obj is None:
         abort(404)
